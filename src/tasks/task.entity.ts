@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Expose } from "class-transformer";
+import { User } from "src/auth/user.entity";
+import { AccessLevel } from "src/auth/users-accesslevel.enum";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TaskStatus } from "./tasks-status.enum";
 
 @Entity()
@@ -15,4 +18,8 @@ export class Task {
 
     @Column()
     status: TaskStatus;
+
+    @ManyToOne(_type => User, user => user.tasks, { eager: false })
+    @Expose({ groups: [AccessLevel.ADMIN]})
+    user: User;
 }
